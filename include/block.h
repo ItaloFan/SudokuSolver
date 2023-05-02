@@ -19,7 +19,7 @@ public:
 
 private:
     // 9bit二进制数，1表示未填写
-    uint32_t _bitmask{kAll};
+    uint32_t bitmask_{kAll};
 };
 
 #endif

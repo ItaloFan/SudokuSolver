@@ -1,10 +1,10 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.12) # cmake最低版本要求
 
-PROJECT(sudoku)    # 工程名 CppTemplate
+PROJECT(sudoku_solver VERSION 1.0)    # 工程名 CppTemplate
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11") # 添加c++11标准支持
 
-SET(CMAKE_BUILD_TYPE "Debug")  # Debug模式 选项: Release Debug MinSizeRel RelWithDebInfo
+SET(CMAKE_BUILD_TYPE "Release")  # Debug模式 选项: Release Debug MinSizeRel RelWithDebInfo
 
 SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g2 -ggdb")  # debug模式下 gdb相关选项
 SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall") # release模式下 gdb相关选项
@@ -34,7 +34,7 @@ endif()
 
 AUX_SOURCE_DIRECTORY(src DIR_SRCS) # 添加源代码文件夹, 自动扫描所有文件
 AUX_SOURCE_DIRECTORY(assets DIR_SRCS) # 添加资源文件夹, 自动扫描所有文件
-add_executable(sudoku  # 输出名为sudoku的可执行文件
+add_executable(sudoku_solver  # 输出名为sudoku_solver的可执行文件
    ${DIR_SRCS}
 )
 # 也可以这么写

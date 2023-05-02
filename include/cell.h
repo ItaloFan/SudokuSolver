@@ -11,7 +11,7 @@ public:
     void clear();
 
 private:
-    int _val;
+    int val_;
 };
 
 #endif

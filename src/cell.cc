@@ -2,20 +2,20 @@
 
 bool Cell::empty()
 {
-    return _val == 0;
+    return val_ == 0;
 }
 
 void Cell::set(int val)
 {
-    _val = val;
+    val_ = val;
 }
 
 int Cell::val()
 {
-    return _val;
+    return val_;
 }
 
 void Cell::clear()
 {
-    _val = 0;
+    val_ = 0;
 }

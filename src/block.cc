@@ -25,20 +25,20 @@ std::vector<int> Block::getMiss()
 
 void Block::bit_xor(uint32_t val)
 {
-    _bitmask ^= val;
+    bitmask_ ^= val;
 }
 
 void Block::bit_and(uint32_t val)
 {
-    _bitmask &= val;
+    bitmask_ &= val;
 }
 
 uint32_t Block::bit_mask()
 {
-    return _bitmask;
+    return bitmask_;
 }
 
 void Block::bit_or(uint32_t val)
 {
-    _bitmask |= val;
+    bitmask_ |= val;
 }

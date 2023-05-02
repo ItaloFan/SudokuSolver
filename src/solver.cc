@@ -8,41 +8,74 @@
 
 Solver::Solver()
 {
-    clearAll();
-    _num_guesses = 0;
+    num_guesses_ = 0;
 }
 
 Solver::Solver(std::string puzzle)
 {
-    _num_guesses = 0;
+    num_guesses_ = 0;
     init(puzzle);
 }
 
 void Solver::init(std::string puzzle)
 {
-    std::vector<int> nums = _str2num(puzzle);
+    std::vector<int> nums = str2num_(puzzle);
     // fill 81 grid
     for (size_t i = 0; i < nums.size(); i++)
     {
         Pos pos = Pos(i);
         if (nums[i] > 0 && nums[i] <= 9)
         {
-            _board[pos.row][pos.col].set(nums[i]);
+            board_[pos.row][pos.col].set(nums[i]);
             uint32_t value = 1u << (uint32_t)(nums[i] - 1);
-            _rows[pos.row].bit_xor(value);
-            _cols[pos.col].bit_xor(value);
-            _boxes[pos.box].bit_xor(value);
+            rows_[pos.row].bit_xor(value);
+            cols_[pos.col].bit_xor(value);
+            boxes_[pos.box].bit_xor(value);
         }
         else
         {
-            _board[pos.row][pos.col].clear();
-            _cells_todo.emplace_back(pos);
+            board_[pos.row][pos.col].clear();
+            cells_todo_.emplace_back(pos);
         }
     }
-    _num_todo = _cells_todo.size() - 1;
+    num_todo_ = cells_todo_.size() - 1;
+}
+bool Solver::valid_puzzle()
+{
+    bool pass_valid = true;
+    auto start_time = std::chrono::high_resolution_clock::now();
+    int count = count_solution_(0);
+    if (count == 0)
+    {
+        std::cout << "Cannot solve, invalid input. " << std::endl;
+        pass_valid = false;
+    }
+    else if (count > 1)
+    {
+        std::cout << "Multiple solutions. " << std::endl;
+        std::string usr_input;
+        std::cout << "Continue solve? (Y/y/yes/N/n/no)";
+        std::cin >> usr_input;
+        if (usr_input == "Y" || usr_input == "y" || usr_input == "yes")
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    if (pass_valid)
+        std::cout << "Puzzle pass validation." << std::endl;
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time); // 计算时间差
+    std::cout << "Validation takes " << duration.count() << " microseconds. " << std::endl;
+
+    return pass_valid;
 }
 
-std::vector<int> Solver::_str2num(const std::string &puzzle)
+std::vector<int> Solver::str2num_(const std::string &puzzle)
 {
     std::vector<int> nums;
     std::transform(puzzle.begin(), puzzle.end(), std::back_inserter(nums),
@@ -51,36 +84,36 @@ std::vector<int> Solver::_str2num(const std::string &puzzle)
     return nums;
 }
 
-bool Solver::_satisfyGivenPartialAssignment(uint32_t todo_idx)
+bool Solver::satisfyGivenPartialAssignment_(uint32_t todo_idx)
 {
-    _move_best_todo_to_front(todo_idx);
-    Pos pos = _cells_todo[todo_idx];
-    auto candidates = _rows[pos.row].bit_mask() & _cols[pos.col].bit_mask() & _boxes[pos.box].bit_mask();
+    move_best_todo_to_front_(todo_idx);
+    Pos pos = cells_todo_[todo_idx];
+    auto candidates = rows_[pos.row].bit_mask() & cols_[pos.col].bit_mask() & boxes_[pos.box].bit_mask();
     while (candidates)
     {
         uint32_t candidate = GetLowBit(candidates);
         // only count assignment as a guess if there's more than one candidate.
         if (candidates ^ candidate)
-            _num_guesses++;
+            num_guesses_++;
 
         // clear the candidate from available candidate sets for row, col, box
         // 该行、列、子块不能再填写candidate
-        _rows[pos.row].bit_xor(candidate);
-        _cols[pos.col].bit_xor(candidate);
-        _boxes[pos.box].bit_xor(candidate);
+        rows_[pos.row].bit_xor(candidate);
+        cols_[pos.col].bit_xor(candidate);
+        boxes_[pos.box].bit_xor(candidate);
 
         // 递归，若正确修改board，返回true
-        if (todo_idx == _num_todo || _satisfyGivenPartialAssignment(todo_idx + 1))
+        if (todo_idx == num_todo_ || satisfyGivenPartialAssignment_(todo_idx + 1))
         {
-            _board[pos.row][pos.col].set(1 + LowOrderBitIndex(candidate));
+            board_[pos.row][pos.col].set(1 + LowOrderBitIndex(candidate));
             return true;
         }
 
         // restore the candidate to available candidate sets for row, col, box
         // 若递归失败，取消candidate的占用，该数字可以填写
-        _rows[pos.row].bit_or(candidate);
-        _cols[pos.col].bit_or(candidate);
-        _boxes[pos.box].bit_or(candidate);
+        rows_[pos.row].bit_or(candidate);
+        cols_[pos.col].bit_or(candidate);
+        boxes_[pos.box].bit_or(candidate);
 
         // 从candidates除去candidate
 
@@ -89,103 +122,83 @@ bool Solver::_satisfyGivenPartialAssignment(uint32_t todo_idx)
     return false;
 }
 
-int Solver::_num_candidates(const Pos &pos)
+// 暴力搜索判断是否多解，不返回具体解法个数
+int Solver::count_solution_(uint32_t todo_idx)
 {
-    auto candidates = _rows[pos.row].bit_mask() & _cols[pos.col].bit_mask() & _boxes[pos.box].bit_mask();
+    if (solution_count_ > 1)
+        return solution_count_;
+    move_best_todo_to_front_(todo_idx);
+    Pos pos = cells_todo_[todo_idx];
+    auto candidates = rows_[pos.row].bit_mask() & cols_[pos.col].bit_mask() & boxes_[pos.box].bit_mask();
+    while (candidates)
+    {
+        uint32_t candidate = GetLowBit(candidates);
+        // only count assignment as a guess if there's more than one candidate.
+        if (candidates ^ candidate)
+            num_guesses_++;
+
+        // clear the candidate from available candidate sets for row, col, box
+        // 该行、列、子块不能再填写candidate
+        rows_[pos.row].bit_xor(candidate);
+        cols_[pos.col].bit_xor(candidate);
+        boxes_[pos.box].bit_xor(candidate);
+
+        // 递归，若正确修改board，返回true
+        if (todo_idx == num_todo_ || count_solution_(todo_idx + 1))
+        {
+            // 递归到最后一个元素说明是可行解法
+            if (todo_idx == num_todo_)
+                solution_count_++;
+        }
+
+        // 取消占用
+        rows_[pos.row].bit_or(candidate);
+        cols_[pos.col].bit_or(candidate);
+        boxes_[pos.box].bit_or(candidate);
+
+        // 从candidates除去candidate
+        candidates = ClearLowBit(candidates);
+    }
+    return solution_count_;
+}
+
+int Solver::num_candidates_(const Pos &pos)
+{
+    auto candidates = rows_[pos.row].bit_mask() & cols_[pos.col].bit_mask() & boxes_[pos.box].bit_mask();
     return NumBitsSet(candidates);
 }
 
-void Solver::_move_best_todo_to_front(uint32_t todo_index)
+void Solver::move_best_todo_to_front_(uint32_t todo_index)
 {
-    std::sort(_cells_todo.begin() + todo_index,
-              _cells_todo.end(),
+    std::sort(cells_todo_.begin() + todo_index,
+              cells_todo_.end(),
               [&](const Pos &cell1, const Pos &cell2)
               {
-                  return _num_candidates(cell1) < _num_candidates(cell2);
+                  return num_candidates_(cell1) < num_candidates_(cell2);
               });
-}
-
-bool Solver::full()
-{
-    for (int row = 0; row < 9; row++)
-    {
-        for (int col = 0; col < 9; col++)
-        {
-            if (_board[row][col].empty())
-            {
-                std::cout << "Board is not full. " << std::endl;
-                return false;
-            }
-        }
-    }
-    std::cout << "Board is full. " << std::endl;
-    return true;
-}
-
-bool Solver::fill(const Pos &pos, int num)
-{
-    if (_board[pos.row][pos.col].empty())
-    {
-        if (!_rows[pos.row].exist(num) && !_cols[pos.col].exist(num) && !_boxes[pos.box].exist(num))
-        {
-            _board[pos.row][pos.col].set(num);
-            return true;
-        }
-    }
-    return false;
-}
-
-bool Solver::fill(int row, int col, int num)
-{
-    return fill(Pos(row, col), num);
-}
-
-void Solver::clear(const Pos &pos)
-{
-    _board[pos.row][pos.col].clear();
-}
-void Solver::clear(int row, int col)
-{
-    _board[row][col].clear();
-}
-
-void Solver::clearAll()
-{
-    for (int row = 0; row < 9; row++)
-    {
-        for (int col = 0; col < 9; col++)
-        {
-            clear(row, col);
-        }
-    }
 }
 
 bool Solver::solve()
 {
     auto start_time = std::chrono::high_resolution_clock::now();
-    if (_satisfyGivenPartialAssignment(0))
+    if (!satisfyGivenPartialAssignment_(0))
     {
-        std::cout << "Solve Successfully. " << std::endl;
-    }
-    else
-    {
-        std::cout << "Solve Failed. You may input a invalid puzzle. " << std::endl;
         return false;
     }
     auto end_time = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time); // 计算时间差
-    _duration = duration.count();
+    duration_ = duration.count();
     return true;
-}
-
-double Solver::solve_time()
-{
-    return _duration;
 }
 
 int Solver::guesses()
 {
-    return _num_guesses;
+    return num_guesses_;
+}
+
+double Solver::solve_time()
+{
+    return duration_;
 }
 
 void Solver::print_board()
@@ -203,7 +216,7 @@ void Solver::print_board()
 
                 std::cout << "|";
             }
-            int val = _board[row][col].val();
+            int val = board_[row][col].val();
             if (val == 0)
             {
                 std::cout << " ";
@@ -227,13 +240,13 @@ void Solver::replace(std::string &puzzle, char oldc, char newc)
     std::replace(puzzle.begin(), puzzle.end(), oldc, newc);
 }
 
-bool Solver::valid(std::string puzzle)
+bool Solver::valid_string(std::string puzzle)
 {
     // 只判断是否是数字输入，不判断重复，无解的情况下提醒用户可能输入错误
     // 输入默认用0做占位符
     if (puzzle.size() != 81)
     {
-        std::cout << "Invalid Input. Please input a puzzle string of size 81. " << std::endl;
+        std::cout << "Invalid Input size " << puzzle.size() << ". Please input a puzzle string of size 81. " << std::endl;
         return false;
     }
     for (auto c : puzzle)
@@ -245,6 +258,5 @@ bool Solver::valid(std::string puzzle)
             return false;
         }
     }
-
     return true;
 }
