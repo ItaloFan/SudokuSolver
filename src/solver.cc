@@ -5,6 +5,7 @@
 #include <iostream>
 #include <array>
 #include <chrono>
+#include <unordered_set>
 
 Solver::Solver()
 {
@@ -44,10 +45,34 @@ bool Solver::valid_puzzle()
 {
     bool pass_valid = true;
     auto start_time = std::chrono::high_resolution_clock::now();
+
+    // 判断重复数字的情况
+    std::unordered_set<std::string> seen;
+    for (size_t i = 0; i < 9; i++)
+    {
+        for (size_t j = 0; j < 9; j++)
+        {
+            if (board_[i][j].empty())
+                continue;
+            int num = board_[i][j].val();
+            std::string row = "row " + std::to_string(i) + " num " + std::to_string(num);
+            std::string col = "col " + std::to_string(j) + " num " + std::to_string(num);
+            std::string blk = "blk " + std::to_string(i / 3 * 3 + j / 3) + " num " + std::to_string(num);
+            if (seen.count(row) || seen.count(col) || seen.count(blk))
+            {
+                std::cout << "Invalid input with duplicate numbers." << std::endl;
+                return false;
+            }
+            seen.insert(row);
+            seen.insert(col);
+            seen.insert(blk);
+        }
+    }
+
     int count = count_solution_(0);
     if (count == 0)
     {
-        std::cout << "Cannot solve, invalid input. " << std::endl;
+        std::cout << "Cannot solve, invalid input without any possible solution. " << std::endl;
         pass_valid = false;
     }
     else if (count > 1)
@@ -57,13 +82,9 @@ bool Solver::valid_puzzle()
         std::cout << "Continue solve? (Y/y/yes/N/n/no)";
         std::cin >> usr_input;
         if (usr_input == "Y" || usr_input == "y" || usr_input == "yes")
-        {
             return true;
-        }
         else
-        {
             return false;
-        }
     }
 
     if (pass_valid)
