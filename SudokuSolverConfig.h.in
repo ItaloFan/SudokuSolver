@@ -1,0 +1,11 @@
+#ifndef SUDOKUSOLVERCONFIG_H
+#define SUDOKUSOLVERCONFIG_H
+
+#include <string>
+
+const static int VERSION_MAJOR = ${SudokuSolver_VERSION_MAJOR};
+const static int VERSION_MINOR = ${SudokuSolver_VERSION_MINOR};
+const static std::string GIT_COMMIT_ID = "${GIT_COMMIT_ID}";
+const static std::string GIT_COMMIT_DATE = "${GIT_COMMIT_DATE}";
+
+#endif

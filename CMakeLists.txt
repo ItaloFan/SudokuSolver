@@ -1,6 +1,32 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.12) # cmake最低版本要求
 
-PROJECT(sudoku_solver VERSION 1.0)    # 工程名 CppTemplate
+PROJECT(SudokuSolver VERSION 1.2)    # 工程名 CppTemplate
+
+# 获取 git commit id 和 commit 时间
+find_package(Git QUIET)
+if(GIT_FOUND)
+  message("git found: ${GIT_EXECUTABLE}")
+  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.git")
+    message("git folder found: ${CMAKE_CURRENT_SOURCE_DIR}/.git")
+    execute_process(
+      COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+      OUTPUT_VARIABLE "GIT_COMMIT_ID"
+      ERROR_QUIET
+      OUTPUT_STRIP_TRAILING_WHITESPACE)
+    execute_process(
+      COMMAND ${GIT_EXECUTABLE} log -1 --format=%cd --date=short
+      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+      OUTPUT_VARIABLE "GIT_COMMIT_DATE"
+      ERROR_QUIET
+      OUTPUT_STRIP_TRAILING_WHITESPACE)
+    message("git commit id: ${GIT_COMMIT_ID}")
+    message("git commit date: ${GIT_COMMIT_DATE}")
+  endif()
+endif()
+
+
+configure_file(SudokuSolverConfig.h.in SudokuSolverConfig.h) # 生成配置文件
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11") # 添加c++11标准支持
 
@@ -41,3 +67,7 @@ add_executable(sudoku_solver  # 输出名为sudoku_solver的可执行文件
 # add_executable(chess  # 输出名为chess的可执行文件
 #    ./src/main.cpp
 # )
+# 添加该文件夹以包括config文件
+target_include_directories(sudoku_solver PUBLIC
+                           "${PROJECT_BINARY_DIR}"
+                           )
