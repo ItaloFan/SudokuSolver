@@ -15,7 +15,7 @@ int main(int argc, char const *argv[])
     {
         dividing_line();
         std::cout << "SudokuSolver " << VERSION_MAJOR << "." << VERSION_MINOR << std::endl;
-        std::cout << "  (Commit ID: " << GIT_COMMIT_ID << " Commit Date: " << GIT_COMMIT_DATE << ")" << std::endl;
+        std::cout << "  ( Commit ID: " << GIT_COMMIT_ID << " Commit Date: " << GIT_COMMIT_DATE << " )" << std::endl;
         dividing_line();
         std::cout << "Usage:\n "
                   << "./sudoku_solver.exe <puzzle>"
