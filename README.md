@@ -6,6 +6,7 @@ mkdir build && cd build
 cmake ..
 make
 ```
+Final executable will be placed in `./bin`
 ## Usage
 Using -h option or just the executable to see usage.
 ```
