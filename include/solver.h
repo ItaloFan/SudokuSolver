@@ -26,7 +26,7 @@ public:
 
 private:
     std::vector<int> str2num_(const std::string &puzzle);
-    bool satisfyGivenPartialAssignment_(uint32_t todo_idx);
+    bool brute_force_solve_(uint32_t todo_idx);
     int count_solution_(uint32_t todo_idx);
     int num_candidates_(const Pos &pos);
     void move_best_todo_to_front_(uint32_t todo_index);

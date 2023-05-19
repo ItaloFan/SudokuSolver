@@ -5,6 +5,7 @@
 
 const static int VERSION_MAJOR = ${SudokuSolver_VERSION_MAJOR};
 const static int VERSION_MINOR = ${SudokuSolver_VERSION_MINOR};
+const static int VERSION_PATCH = ${SudokuSolver_VERSION_PATCH};
 const static std::string GIT_COMMIT_ID = "${GIT_COMMIT_ID}";
 const static std::string GIT_COMMIT_DATE = "${GIT_COMMIT_DATE}";
 

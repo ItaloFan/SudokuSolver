@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "cell.h"
-#include "common.h"
+#include "common.inl"
 
 class Block
 {

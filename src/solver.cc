@@ -1,6 +1,6 @@
 #include "solver.h"
 #include "pos.h"
-#include "common.h"
+#include "common.inl"
 #include <algorithm>
 #include <iostream>
 #include <array>
@@ -105,7 +105,7 @@ std::vector<int> Solver::str2num_(const std::string &puzzle)
     return nums;
 }
 
-bool Solver::satisfyGivenPartialAssignment_(uint32_t todo_idx)
+bool Solver::brute_force_solve_(uint32_t todo_idx)
 {
     move_best_todo_to_front_(todo_idx);
     Pos pos = cells_todo_[todo_idx];
@@ -124,7 +124,7 @@ bool Solver::satisfyGivenPartialAssignment_(uint32_t todo_idx)
         boxes_[pos.box].bit_xor(candidate);
 
         // 递归，若正确修改board，返回true
-        if (todo_idx == num_todo_ || satisfyGivenPartialAssignment_(todo_idx + 1))
+        if (todo_idx == num_todo_ || brute_force_solve_(todo_idx + 1))
         {
             board_[pos.row][pos.col].set(1 + LowOrderBitIndex(candidate));
             return true;
@@ -202,7 +202,7 @@ void Solver::move_best_todo_to_front_(uint32_t todo_index)
 bool Solver::solve()
 {
     auto start_time = std::chrono::high_resolution_clock::now();
-    if (!satisfyGivenPartialAssignment_(0))
+    if (!brute_force_solve_(0))
     {
         return false;
     }
@@ -224,36 +224,35 @@ double Solver::solve_time()
 
 void Solver::print_board()
 {
+    for (int col = 0; col < 9; col++)
+    {
+        std::cout << CROSS_LINE << HORIZONTAL_LINE << HORIZONTAL_LINE << HORIZONTAL_LINE;
+    }
+    std::cout << CROSS_LINE << std::endl;
     for (int row = 0; row < 9; row++)
     {
-        if (row % 3 == 0)
-        {
-            std::cout << "-------------------" << std::endl;
-        }
+        std::cout << VERTICAL_LINE;
         for (int col = 0; col < 9; col++)
         {
-            if (col % 3 == 0)
-            {
-
-                std::cout << "|";
-            }
-            int val = board_[row][col].val();
-            if (val == 0)
+            std::cout << " ";
+            int num = board_[row][col].val();
+            if (num == 0)
             {
                 std::cout << " ";
             }
             else
             {
-                std::cout << val;
+                std::cout << num;
             }
-            if (col % 3 != 2)
-            {
-                std::cout << ' ';
-            }
+            std::cout << " " << VERTICAL_LINE;
         }
-        std::cout << "|" << std::endl;
+        std::cout << std::endl;
+        for (int col = 0; col < 9; col++)
+        {
+            std::cout << CROSS_LINE << HORIZONTAL_LINE << HORIZONTAL_LINE << HORIZONTAL_LINE;
+        }
+        std::cout << CROSS_LINE << std::endl;
     }
-    std::cout << "-------------------" << std::endl;
 }
 
 void Solver::replace(std::string &puzzle, char oldc, char newc)

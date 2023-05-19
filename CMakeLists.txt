@@ -1,6 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.12) # cmake最低版本要求
 
-PROJECT(SudokuSolver VERSION 1.2)    # 工程名 CppTemplate
+PROJECT(SudokuSolver VERSION 1.3.0)    # 工程名 CppTemplate
 
 # 获取 git commit id 和 commit 时间
 find_package(Git QUIET)
@@ -51,6 +51,13 @@ INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/include") # 头文件包含目录
 MESSAGE("Identifying the OS...")
 if(WIN32)
   MESSAGE("This is Windows.")
+  exec_program("cmd" ${PROJECT_SOURCE_DIR} ARGS "/c chcp" OUTPUT_VARIABLE CHCP_OUT)
+  string(REGEX MATCH "[0-9]+" CODE_PAGE ${CHCP_OUT})
+  message("Active code page: ${CODE_PAGE}")
+  if(CODE_PAGE EQUAL 936 AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    MESSAGE("This is Windows Chinese. Change the charset to GBK.")
+    add_compile_options("-fexec-charset=GBK")
+  endif()
 elseif(APPLE)
   MESSAGE("This is MacOS.")
 elseif(UNIX)

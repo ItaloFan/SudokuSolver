@@ -3,6 +3,7 @@
 
 #include <iostream>
 
+// 位操作
 constexpr uint32_t kAll = 0x1ff; // 9 bits
 inline uint32_t GetLowBit(uint32_t x)
 {
@@ -29,4 +30,14 @@ inline int NumBitsSet(uint32_t n)
     }
     return count;
 }
+#endif
+
+#ifndef VERTICAL_LINE
+#define VERTICAL_LINE "\u2503"
+#endif
+#ifndef HORIZONTAL_LINE
+#define HORIZONTAL_LINE "\u2501"
+#endif
+#ifndef CROSS_LINE
+#define CROSS_LINE "\u254B"
 #endif
