@@ -1,4 +1,5 @@
 *.pdf
+*.ps1
 .vscode
 assets
 bin

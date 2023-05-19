@@ -2,6 +2,7 @@
 #define COMMON_H
 
 #include <iostream>
+#include "color.h"
 
 // 位操作
 constexpr uint32_t kAll = 0x1ff; // 9 bits
@@ -30,7 +31,6 @@ inline int NumBitsSet(uint32_t n)
     }
     return count;
 }
-#endif
 
 #ifndef VERTICAL_LINE
 #define VERTICAL_LINE "\u2503"
@@ -40,4 +40,8 @@ inline int NumBitsSet(uint32_t n)
 #endif
 #ifndef CROSS_LINE
 #define CROSS_LINE "\u254B"
+#endif
+
+const Color::Code OUTLINE_COLOR = Color::FG_CYAN;
+
 #endif

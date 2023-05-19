@@ -1,6 +1,7 @@
 #include "solver.h"
 #include "pos.h"
 #include "common.inl"
+#include "platform.inl"
 #include <algorithm>
 #include <iostream>
 #include <array>
@@ -78,10 +79,10 @@ bool Solver::valid_puzzle()
     else if (count > 1)
     {
         std::cout << "Multiple solutions. " << std::endl;
-        std::string usr_input;
-        std::cout << "Continue solve? (Y/y/yes/N/n/no)";
-        std::cin >> usr_input;
-        if (usr_input == "Y" || usr_input == "y" || usr_input == "yes")
+        char usr_input = '\0';
+        std::cout << "Continue solve? (Y/N)";
+        usr_input = getch();
+        if (usr_input == 0x0D || usr_input == 'Y' || usr_input == 'y')
             return true;
         else
             return false;
@@ -221,18 +222,40 @@ double Solver::solve_time()
 {
     return duration_;
 }
+void Solver::print_underline_(int row)
+{
+    bool change_all_color = false;
+    if (row == -1 || row % 3 == 2)
+    {
+        change_all_color = true;
+        std::cout << Color::Modifier(OUTLINE_COLOR);
+    }
+    for (int col = 0; col < 9; col++)
+    {
+        if (!change_all_color && col % 3 == 0)
+        {
 
+            std::cout << Color::Modifier(OUTLINE_COLOR) << CROSS_LINE << Color::Modifier(Color::RESET) << HORIZONTAL_LINE << HORIZONTAL_LINE << HORIZONTAL_LINE;
+        }
+        else
+        {
+            std::cout << CROSS_LINE << HORIZONTAL_LINE << HORIZONTAL_LINE << HORIZONTAL_LINE;
+        }
+    }
+    std::cout << Color::Modifier(OUTLINE_COLOR) << CROSS_LINE << std::endl;
+    if (row == -1 || row % 3 == 2)
+    {
+        std::cout << Color::Modifier(Color::RESET);
+    }
+}
 void Solver::print_board()
 {
     std::cout << std::endl;
-    for (int col = 0; col < 9; col++)
-    {
-        std::cout << CROSS_LINE << HORIZONTAL_LINE << HORIZONTAL_LINE << HORIZONTAL_LINE;
-    }
-    std::cout << CROSS_LINE << std::endl;
+
+    print_underline_();
     for (int row = 0; row < 9; row++)
     {
-        std::cout << VERTICAL_LINE;
+        std::cout << Color::Modifier(OUTLINE_COLOR) << VERTICAL_LINE << Color::Modifier(Color::RESET);
         for (int col = 0; col < 9; col++)
         {
             std::cout << " ";
@@ -245,15 +268,20 @@ void Solver::print_board()
             {
                 std::cout << num;
             }
-            std::cout << " " << VERTICAL_LINE;
+            std::cout << " ";
+            if (col % 3 == 2)
+            {
+                std::cout << Color::Modifier(OUTLINE_COLOR) << VERTICAL_LINE << Color::Modifier(Color::RESET);
+            }
+            else
+            {
+                std::cout << VERTICAL_LINE;
+            }
         }
         std::cout << std::endl;
-        for (int col = 0; col < 9; col++)
-        {
-            std::cout << CROSS_LINE << HORIZONTAL_LINE << HORIZONTAL_LINE << HORIZONTAL_LINE;
-        }
-        std::cout << CROSS_LINE << std::endl;
+        print_underline_(row);
     }
+
     std::cout << std::endl;
 }
 

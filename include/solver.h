@@ -30,6 +30,7 @@ private:
     int count_solution_(uint32_t todo_idx);
     int num_candidates_(const Pos &pos);
     void move_best_todo_to_front_(uint32_t todo_index);
+    void print_underline_(int row = -1);
 
     Cell board_[9][9];
     Block rows_[9];

@@ -13,8 +13,15 @@ void dividing_line()
 void print_version()
 {
     dividing_line();
-    std::cout << "SudokuSolver " << VERSION_MAJOR << "." << VERSION_MINOR << "." << VERSION_PATCH << std::endl;
-    std::cout << "  ( Commit ID: " << GIT_COMMIT_ID << " Commit Date: " << GIT_COMMIT_DATE << " )" << std::endl;
+    if (PRE_RELEASE != "")
+    {
+        std::cout << "SudokuSolver " << VERSION_MAJOR << "." << VERSION_MINOR << "." << VERSION_PATCH << "-" << PRE_RELEASE << std::endl;
+    }
+    else
+    {
+
+        std::cout << "SudokuSolver " << VERSION_MAJOR << "." << VERSION_MINOR << "." << VERSION_PATCH << std::endl;
+    }
     std::cout << "Repository https://github.com/ItaloFan/SudokuSolver" << std::endl;
 }
 
@@ -63,14 +70,14 @@ int main(int argc, char const *argv[])
         print_help();
         return 0;
     }
-    std::string puzzle = argv[1];
-    if (puzzle == "-gh")
+    std::string option = argv[1];
+    if (option == "-gh")
     {
         gui_help();
         return 0;
     }
-
-    if (puzzle == "-g")
+    std::string puzzle = argv[1];
+    if (option == "-g")
     {
         Scene scene = Scene();
         scene.input();
@@ -91,8 +98,12 @@ int main(int argc, char const *argv[])
         return 0;
     }
     solver.init(puzzle);
-    std::cout << "Puzzle: " << std::endl;
-    solver.print_board();
+    if (option != "-g")
+    {
+
+        std::cout << "Puzzle: " << std::endl;
+        solver.print_board();
+    }
     if (!solver.valid_puzzle())
     {
         return 0;

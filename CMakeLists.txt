@@ -1,7 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.12) # cmake最低版本要求
 
-PROJECT(SudokuSolver VERSION 1.3.1)    # 工程名 CppTemplate
-
+PROJECT(SudokuSolver VERSION 1.3.2)    # 工程名 CppTemplate
+set(PRE_RELEASE "alpha.1") # 是否为预发布版本
 # 获取 git commit id 和 commit 时间
 find_package(Git QUIET)
 if(GIT_FOUND)

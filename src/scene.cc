@@ -1,6 +1,7 @@
 #include <iostream>
 #include "scene.h"
 #include "pos.h"
+#include "color.h"
 #include "platform.inl"
 #include "common.inl"
 
@@ -36,7 +37,7 @@ void Scene::show()
     print_underline_();
     for (int row = 0; row < 9; row++)
     {
-        std::cout << VERTICAL_LINE;
+        std::cout << Color::Modifier(OUTLINE_COLOR) << VERTICAL_LINE << Color::Modifier(Color::RESET);
         for (int col = 0; col < 9; col++)
         {
             std::cout << " ";
@@ -49,11 +50,20 @@ void Scene::show()
             {
                 std::cout << num;
             }
-            std::cout << " " << VERTICAL_LINE;
+            std::cout << " ";
+            if (col % 3 == 2)
+            {
+                std::cout << Color::Modifier(OUTLINE_COLOR) << VERTICAL_LINE << Color::Modifier(Color::RESET);
+            }
+            else
+            {
+                std::cout << VERTICAL_LINE;
+            }
         }
         std::cout << std::endl;
         print_underline_(row);
     }
+
     std::cout << std::endl;
 }
 
@@ -149,9 +159,27 @@ void Scene::cls_()
 
 void Scene::print_underline_(int row)
 {
+    bool change_all_color = false;
+    if (row == -1 || row % 3 == 2)
+    {
+        change_all_color = true;
+        std::cout << Color::Modifier(OUTLINE_COLOR);
+    }
     for (int col = 0; col < 9; col++)
     {
-        std::cout << CROSS_LINE << HORIZONTAL_LINE << ((cur_cell_.row == row && cur_cell_.col == col) ? "^" : HORIZONTAL_LINE) << HORIZONTAL_LINE;
+        if (!change_all_color && col % 3 == 0)
+        {
+
+            std::cout << Color::Modifier(OUTLINE_COLOR) << CROSS_LINE << Color::Modifier(Color::RESET) << HORIZONTAL_LINE << ((cur_cell_.row == row && cur_cell_.col == col) ? "^" : HORIZONTAL_LINE) << HORIZONTAL_LINE;
+        }
+        else
+        {
+            std::cout << CROSS_LINE << HORIZONTAL_LINE << ((cur_cell_.row == row && cur_cell_.col == col) ? "^" : HORIZONTAL_LINE) << HORIZONTAL_LINE;
+        }
     }
-    std::cout << CROSS_LINE << std::endl;
+    std::cout << Color::Modifier(OUTLINE_COLOR) << CROSS_LINE << std::endl;
+    if (row == -1 || row % 3 == 2)
+    {
+        std::cout << Color::Modifier(Color::RESET);
+    }
 }
