@@ -24,11 +24,28 @@ void print_help()
     std::cout << "Usage:\n "
               << "sudoku_solver.exe [<puzzle>] [<option>]\n";
     dividing_line();
-    std::cout << "Where <puzzle> is a string of size 81, representing "
-              << "the \nrow-major Sudoku puzzle to be solved and including numbers only. " << std::endl;
+    std::cout << "Where <puzzle> is row-major 81-char string. \n";
     std::cout << "'0' or '.' is used as a place holder. " << std::endl;
     dividing_line();
-    std::cout << "Alternatively, add /g option to use GUI. \n";
+    std::cout << "Alternatively, add -g option to use GUI. \n";
+    std::cout << "Use -gh to show gui guide. \n";
+    dividing_line();
+}
+
+void gui_help()
+{
+    dividing_line();
+    std::cout << "GUI Guide: \n";
+    std::cout << "  Use keys to move cursor. \n";
+    std::cout << "  UP: W/K\n";
+    std::cout << "  DOWN: S/J\n";
+    std::cout << "  LEFT: A/H\n";
+    std::cout << "  RIGHT: D/L\n";
+    std::cout << "  Other operations: \n";
+    std::cout << "  Quit: Q/Esc\n";
+    std::cout << "  Set value: 1-9\n";
+    std::cout << "  Clear value: 0\n";
+    std::cout << "  Confirm: Enter\n";
     dividing_line();
 }
 
@@ -47,7 +64,13 @@ int main(int argc, char const *argv[])
         return 0;
     }
     std::string puzzle = argv[1];
-    if (puzzle == "/g")
+    if (puzzle == "-gh")
+    {
+        gui_help();
+        return 0;
+    }
+
+    if (puzzle == "-g")
     {
         Scene scene = Scene();
         scene.input();

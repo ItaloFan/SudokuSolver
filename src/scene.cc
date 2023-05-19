@@ -31,6 +31,7 @@ bool Scene::clear_val(Pos pos)
 void Scene::show()
 {
     cls_();
+    std::cout << std::endl;
 
     print_underline_();
     for (int row = 0; row < 9; row++)
@@ -53,6 +54,7 @@ void Scene::show()
         std::cout << std::endl;
         print_underline_(row);
     }
+    std::cout << std::endl;
 }
 
 void Scene::reset()

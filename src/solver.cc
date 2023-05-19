@@ -224,6 +224,7 @@ double Solver::solve_time()
 
 void Solver::print_board()
 {
+    std::cout << std::endl;
     for (int col = 0; col < 9; col++)
     {
         std::cout << CROSS_LINE << HORIZONTAL_LINE << HORIZONTAL_LINE << HORIZONTAL_LINE;
@@ -253,6 +254,7 @@ void Solver::print_board()
         }
         std::cout << CROSS_LINE << std::endl;
     }
+    std::cout << std::endl;
 }
 
 void Solver::replace(std::string &puzzle, char oldc, char newc)
