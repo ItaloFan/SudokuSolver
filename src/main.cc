@@ -12,7 +12,7 @@ void dividing_line()
 
 void print_version()
 {
-    dividing_line();
+    std::cout << std::endl;
     if (PRE_RELEASE != "")
     {
         std::cout << "SudokuSolver " << VERSION_MAJOR << "." << VERSION_MINOR << "." << VERSION_PATCH << "-" << PRE_RELEASE << std::endl;
@@ -22,19 +22,21 @@ void print_version()
 
         std::cout << "SudokuSolver " << VERSION_MAJOR << "." << VERSION_MINOR << "." << VERSION_PATCH << std::endl;
     }
+    std::cout << "  ( Commit ID: " << GIT_COMMIT_ID << " Commit Date: " << GIT_COMMIT_DATE << " )" << std::endl;
+    std::cout << std::endl;
     std::cout << "Repository https://github.com/ItaloFan/SudokuSolver" << std::endl;
 }
 
 void print_help()
 {
     dividing_line();
-    std::cout << "Usage:\n "
-              << "sudoku_solver.exe [<puzzle>] [<option>]\n";
+    std::cout << "Usage: \n"
+              << "sudoku_solver <puzzle> or \nsudoku_solver <option>\n";
     dividing_line();
     std::cout << "Where <puzzle> is row-major 81-char string. \n";
     std::cout << "'0' or '.' is used as a place holder. " << std::endl;
     dividing_line();
-    std::cout << "Alternatively, add -g option to use GUI. \n";
+    std::cout << "Alternatively, use -g option to use GUI. \n";
     std::cout << "Use -gh to show gui guide. \n";
     dividing_line();
 }
@@ -74,6 +76,11 @@ int main(int argc, char const *argv[])
     if (option == "-gh")
     {
         gui_help();
+        return 0;
+    }
+    else if (option == "-v" or option == "--version")
+    {
+        print_version();
         return 0;
     }
     std::string puzzle = argv[1];

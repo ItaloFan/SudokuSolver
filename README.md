@@ -24,6 +24,8 @@ Usage:
 
 Where <puzzle> is a string of size 81, representing the row-major Sudoku puzzle to be solved and including numbers only. '0' or '.' is used as place holder. 
 
+Use `-v` or `--version` option to see version info. 
+
 ## GUI guide
 
 - **Move:** ASWD or HJKL ( VIM ) for ← ↓ ↑ →

@@ -80,7 +80,7 @@ bool Solver::valid_puzzle()
     {
         std::cout << "Multiple solutions. " << std::endl;
         char usr_input = '\0';
-        std::cout << "Continue solve? (Y/N)";
+        std::cout << "Continue solve? (Y/N)\n";
         usr_input = getch();
         if (usr_input == 0x0D || usr_input == 'Y' || usr_input == 'y')
             return true;
