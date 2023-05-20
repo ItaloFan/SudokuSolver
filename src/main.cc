@@ -3,6 +3,7 @@
 #include "SudokuSolverConfig.h"
 #include "solver.h"
 #include "scene.h"
+#include "easter_egg.h"
 
 // 用于输出间隔符
 void dividing_line()
@@ -70,6 +71,11 @@ int main(int argc, char const *argv[])
     else if (argc > 2 or std::string(argv[1]) == "-h" or std::string(argv[1]) == "--help")
     {
         print_help();
+        return 0;
+    }
+    else if (std::string(argv[1]) == "marx")
+    {
+        print_easter_egg();
         return 0;
     }
     std::string option = argv[1];

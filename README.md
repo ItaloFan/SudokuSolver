@@ -4,6 +4,8 @@ A simplest sudoku solver using brute force algorithm. Reference to [t-dillon](ht
 
 ## Build
 
+Can be built for both `windows` and `linux`. 
+
 ```
 mkdir build && cd build
 cmake ..
@@ -18,8 +20,8 @@ Using -h/--help or just the executable to see usage.
 
 ```
 Usage:
-  sudoku_solver.exe <puzzle> Or // solve puzzle directly
-  sudoku_solver.exe -g // use GUI to input puzzle
+  sudoku_solver <puzzle> Or // solve puzzle directly
+  sudoku_solver -g // use GUI to input puzzle
 ```
 
 Where <puzzle> is a string of size 81, representing the row-major Sudoku puzzle to be solved and including numbers only. '0' or '.' is used as place holder. 
@@ -41,9 +43,9 @@ Use `-v` or `--version` option to see version info.
 **command:**
 
 ```
-./sudoku_solver.exe 4...3.......6..8..........1....5..9..8....6...7.2........1.27..5.3....4.9........
+./sudoku_solver 4...3.......6..8..........1....5..9..8....6...7.2........1.27..5.3....4.9........
 // Or use 0 as place holder
-// ./sudoku_solver.exe 400030000000600800000000001000050090080000600070200000000102700503000040900000000
+// ./sudoku_solver 400030000000600800000000001000050090080000600070200000000102700503000040900000000
 ```
 
 output:
@@ -101,7 +103,7 @@ Solve in 10403 microseconds with 1546 guesses.
 **GUI:**
 
 ```
-./sudoku_solver.exe -g
+./sudoku_solver -g
 ```
 
 output:
