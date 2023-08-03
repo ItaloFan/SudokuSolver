@@ -35,7 +35,7 @@ void print_help()
               << "sudoku_solver <puzzle> or \nsudoku_solver <option>\n";
     dividing_line();
     std::cout << "Where <puzzle> is row-major 81-char string. \n";
-    std::cout << "'0' or '.' is used as a place holder. " << std::endl;
+    std::cout << "'0' or '.' is used as place holder. " << std::endl;
     dividing_line();
     std::cout << "Alternatively, use -g option to use GUI. \n";
     std::cout << "Use -gh to show gui guide. \n";
@@ -73,7 +73,7 @@ int main(int argc, char const *argv[])
         print_help();
         return 0;
     }
-    else if (std::string(argv[1]) == "marx")
+    else if (std::string(argv[1]) == "marx" or std::string(argv[1]) == "Marx" or std::string(argv[1]) == "MARX")
     {
         print_easter_egg();
         return 0;

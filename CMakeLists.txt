@@ -1,7 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.12) # cmake最低版本要求
 
 PROJECT(SudokuSolver VERSION 1.3.2)    # 工程名 CppTemplate
-set(PRE_RELEASE "alpha.5") # 是否为预发布版本
+# set(PRE_RELEASE "alpha.6") # 是否为预发布版本
 # 获取 git commit id 和 commit 时间
 find_package(Git QUIET)
 if(GIT_FOUND)
@@ -32,7 +32,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11") # 添加c++11标准支持
 
 SET(CMAKE_BUILD_TYPE "Release")  # Debug模式 选项: Release Debug MinSizeRel RelWithDebInfo
 
-SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g2 -ggdb")  # debug模式下 gdb相关选项
+# SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g2 -ggdb")  # debug模式下 gdb相关选项
 SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall") # release模式下 gdb相关选项
 
 # set(CMAKE_VERBOSE_MAKEFILE ON) # 开启调试 出现问题时开启
